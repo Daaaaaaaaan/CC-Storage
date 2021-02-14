@@ -3,7 +3,7 @@
 --              computer.
 
 -- Load Config
-local file = fs.open("/disk/config.json", "r")
+local file = fs.open("/config.json", "r")
 
 -- Check if file is avaliable
 local config = nil
@@ -17,13 +17,11 @@ end
 -- Create Base URL
 local base_url = "https://raw.githubusercontent.com/Daaaaaaaaan/CC-Storage/"..config.branch
 
--- Define Programs
+-- Define Programs 
 local programs = {
-	{base_url.."/controller-computer/startup", "/startup"},
-	{base_url.."/controller-computer/update.lua", "/controller-computer/update.lua"},
-	{base_url.."/controller-computer/add-recipe.lua", "/controller-computer/add-recipe.lua"},
-	{base_url.."/controller-computer/main-controller.lua", "/controller-computer/main-controller.lua"},
-	{base_url.."/apis/storage.lua", "/controller-computer/storage.lua"}
+	{base_url.."/remote-terminal/startup", "/startup"},
+	{base_url.."/remote-terminal/update.lua", "/remote-termina/update.lua"}
+	{base_url.."/remote-terminal/remote-terminal.lua", "/remote-terminal/remote-terminal.lua"}
 }
 
 -- Loops through required programs
@@ -33,5 +31,5 @@ for _, program in pairs(programs) do
 	-- Delete Existing 
 	shell.run("rm", program[2])
 	-- Download Latest Program
-	shell.run("wget", program[1], program[2])
+	shell.run("pastebin", "get", program[1], program[2])
 end
