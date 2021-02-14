@@ -91,7 +91,7 @@ local function main()
 			if key == "backspace" then
 				search = string.sub(search, 1, -2)
 			end
-		elseif event_data[1] == "mouse_click" and event_data[2] == 1 then
+		elseif event_data[1] == "mouse_click" then
 			-- Mouse clicked on screen
 			local click_x = event_data[3]
 			local click_y = event_data[4]
@@ -113,20 +113,37 @@ local function main()
 						count = count + 1
 					end
 					
-					-- Sends fetch packet to server
-					local request = {
-						["type"] = "get_item",
-						["item"] = item_clicked,
-						["amount"] = 1
-					}
-					modem.transmit(0, 3, textutils.serializeJSON(request))
-					
-					local event, side, channel, replyChannel, res, distance = os.pullEvent("modem_message")
-					res = textutils.unserializeJSON(res)
-			
-					-- Display Result
-					message_window.setCursorPos(1,1)
-					message_window.write(res.status)
+					if event_data[2] == 1 then
+						-- Sends fetch packet to server
+						local request = {
+							["type"] = "get_item",
+							["item"] = item_clicked,
+							["amount"] = 1
+						}
+						modem.transmit(0, 3, textutils.serializeJSON(request))
+						
+						local event, side, channel, replyChannel, res, distance = os.pullEvent("modem_message")
+						res = textutils.unserializeJSON(res)
+				
+						-- Display Result
+						message_window.setCursorPos(1,1)
+						message_window.write(res.status)
+					elseif event_data[2] == 2 then
+						-- Sends craft packet to server
+						local request = {
+							["type"] = "craft_item",
+							["item"] = item_clicked,
+							["amount"] = 1
+						}
+						modem.transmit(0, 3, textutils.serializeJSON(request))
+						
+						local event, side, channel, replyChannel, res, distance = os.pullEvent("modem_message")
+						res = textutils.unserializeJSON(res)
+				
+						-- Display Result
+						message_window.setCursorPos(1,1)
+						message_window.write(res.status)
+					end
 				end
 			end
 		end
