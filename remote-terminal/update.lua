@@ -31,5 +31,5 @@ for _, program in pairs(programs) do
 	-- Delete Existing 
 	shell.run("rm", program[2])
 	-- Download Latest Program
-	shell.run("pastebin", "get", program[1], program[2])
+	shell.run("wget", program[1], program[2])
 end
