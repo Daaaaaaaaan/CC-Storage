@@ -1,0 +1,6 @@
+-- Name: startup
+-- Description: Startup script for controller computer.
+--              Runs remote-terminal.
+
+-- Run Startup Script
+shell.run("/remote-terminal/remote-terminal.lua")

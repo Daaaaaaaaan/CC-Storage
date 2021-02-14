@@ -1,0 +1,6 @@
+-- Name: startup
+-- Description: Startup script for add recipe turtle
+--              runs add-recipe.
+    
+-- Run Startup Script
+shell.run("/add-recipe-turtle/add-recipe.lua")

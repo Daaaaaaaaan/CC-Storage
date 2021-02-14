@@ -1,0 +1,6 @@
+-- Name: startup
+-- Description: Startup script for crafter turtle
+--              runs main-craft.
+    
+-- Run Startup Script
+shell.run("/crafter-turtle/main-craft.lua")
