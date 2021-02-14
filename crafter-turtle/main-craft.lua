@@ -34,25 +34,25 @@ local function main()
 		-- Check decode success
 		if request then
 			-- Check request type and action
-			if request.type == "craft" then
-				-- Craft item from recipe
+			if request.type == "craft_item" then
+				-- Craft item
 				crafter.craft(
 					request.item,
 					1,
 					0,
-					modem)	
+					modem)
+					
+				response = {
+					status = "Success"
+				}
+				
+				modem.transmit(reply_channel, 2, textutils.serializeJSON(response))
 			else
 				-- Unknown request type
 				print("Unknown request type")
 			end
 		end
 	end
-	
-	crafter.craft(
-		{},
-		1,
-		0,
-		modem)
 end
 
 -- Call main function

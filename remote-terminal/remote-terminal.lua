@@ -128,7 +128,7 @@ local function main()
 						-- Display Result
 						message_window.setCursorPos(1,1)
 						message_window.write(res.status)
-					elseif event_data[2] == 2 then
+					elseif event_data[2] == 3 then
 						-- Sends craft packet to server
 						local request = {
 							["type"] = "craft_item",
