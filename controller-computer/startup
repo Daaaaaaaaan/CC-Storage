@@ -1,0 +1,6 @@
+-- Name: startup
+-- Description: Startup script for controller computer.
+--              Runs main-controller.
+    
+-- Run Startup Script
+shell.run("/controller-computer/main-controller")
