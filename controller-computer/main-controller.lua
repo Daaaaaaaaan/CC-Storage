@@ -113,6 +113,32 @@ local function handle_packet(event_data, modem, monitor)
 			-- Send
 			local raw_response = textutils.serializeJSON(response)
 			modem.transmit(reply_channel, 0, raw_response)
+		elseif req.type == "craft_item" then
+			-- Sends craft request to crafting turtle
+			local request = {
+				["type"] = "craft_item",
+				["item"] = item_clicked,
+				["amount"] = 1
+			}
+			modem.transmit(2, 0, textutils.serializeJSON(request))
+			
+			local event, side, channel, replyChannel, res, distance = os.pullEvent("modem_message")
+			res = textutils.unserializeJSON(res)
+	
+			-- Return fail response
+			if res.status == "Success" then
+				-- Return success response
+				response = {
+					status = "Success"
+				}
+			else
+				-- Return fail response
+				response = {
+					status = "Failed"
+				}
+			end
+			
+			modem.transmit(reply_channel, 0, textutils.serializeJSON(request))
 		else
 			-- Unknown packet type no action
 			print("Unknown packet type")
