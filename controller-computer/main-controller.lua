@@ -117,7 +117,7 @@ local function handle_packet(event_data, modem, monitor)
 			-- Sends craft request to crafting turtle
 			local request = {
 				["type"] = "craft_item",
-				["item"] = item_clicked,
+				["item"] = req.item,
 				["amount"] = 1
 			}
 			modem.transmit(2, 0, textutils.serializeJSON(request))

@@ -275,7 +275,7 @@ local function craft_item(craft_plan)
 	end
 end
 
-local function craft(recipe, amount, reply_channel, modem) 
+local function craft(item, amount, reply_channel, modem) 
 	
 	-- Wrap peripherals
 	io_chest, wired_modem = wrap_periferals()
@@ -285,7 +285,7 @@ local function craft(recipe, amount, reply_channel, modem)
 	recipe_list = load_recipes()
 	
 	-- Get recipe
-	local recipe = get_recipe("minecraft:oak_sign", recipe_list)
+	local recipe = get_recipe(item, recipe_list)
 	
 	-- Generate craft plan
 	success, _ = can_craft(recipe, 1, {}, {})

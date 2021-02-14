@@ -20,33 +20,33 @@ local function main()
 	local modem = init_modem()
 		
 	-- Main Event Loop
-	-- while true do
+	while true do
 
-		-- -- Wait for any event
-		-- local event_data = {os.pullEvent("modem_message")}
-		-- local channel = event_data[3]
-		-- local reply_channel = event_data[4]
-		-- local raw_request = event_data[5]
+		-- Wait for any event
+		local event_data = {os.pullEvent("modem_message")}
+		local channel = event_data[3]
+		local reply_channel = event_data[4]
+		local raw_request = event_data[5]
 		
-		-- -- Parse request
-		-- local request = textutils.unserializeJSON(raw_request)
+		-- Parse request
+		local request = textutils.unserializeJSON(raw_request)
 		
-		-- -- Check decode success
-		-- if request then
-			-- -- Check request type and action
-			-- if request.type == "craft" then
-				-- -- Craft item from recipe
-				-- crafter.craft(
-					-- request.recipe,
-					-- request.amount,
-					-- reply_channel,
-					-- modem)	
-			-- else
-				-- -- Unknown request type
-				-- print("Unknown request type")
-			-- end
-		-- end
-	-- end
+		-- Check decode success
+		if request then
+			-- Check request type and action
+			if request.type == "craft" then
+				-- Craft item from recipe
+				crafter.craft(
+					request.item,
+					1,
+					0,
+					modem)	
+			else
+				-- Unknown request type
+				print("Unknown request type")
+			end
+		end
+	end
 	
 	crafter.craft(
 		{},
