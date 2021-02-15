@@ -1,6 +1,21 @@
 -- Name: storage.lua
 -- Description: Handles network storage actions.
 
+local function add_item_to_index(item, item_details, inventory_name, slot, storage_items)
+	-- Adds item to storage
+	storage_items[item.name] = {
+		displayName = item_details.displayName,
+		stackSize = item_details.maxCount,
+		totalCount = item.count,
+		locations = {
+			[inventory_name] = {
+				count = item.count,
+				["slot"] = slot
+			}
+		}
+	}
+end
+
 local function get_items()
 	-- Wraps all storage chests
 	local storage_chests = {peripheral.find("ironchest:gold_chest")}
@@ -31,17 +46,8 @@ local function get_items()
 					["slot"] = slot
 				}
 			else
-				-- Adds items to list
-				items[item.name] = {
-					displayName = item_details.displayName,
-					totalCount = item.count,
-					locations = {
-						[chest_name] = {
-							count = item.count,
-							["slot"] = slot
-						}
-					}
-				}
+				-- Adds items to index
+				add_item_to_index(item, item_details, chest_name, slot, items)
 			end
 		end
 	end
@@ -120,6 +126,83 @@ local function get_item(item, amount, storage_items, to_inventory, to_slot)
 		return false, moved_count
 	else
 		return true, moved_count
+	end
+end
+
+local function dump_inventory(inventory_name, storage_items)
+	
+	-- Get iventory of items to return to storage
+	local inventory = peripheral.wrap(inventory_name)
+	
+	-- Get items from inventory
+	local inventory_items = inventory.list()
+	
+	-- Loop through items and add to list
+	for slot, item in pairs(inventory_items) do
+		
+		local to_store = item.count
+		local items_stored = 0
+		
+		if storage_items[item] ~= nil then
+			-- Item found in storage index
+			for location, details in pairs(storage_items[item].locations) do
+				if details.count < storage_items[item].stackSize then
+					-- Max to move to fill slot
+					local max_to_move = storage_items[item].stackSize - details.counts
+					-- Amount to move to this chest
+					local to_move = math.min(max_to_move, to_store - items_stored)
+					-- Attempt to move items
+					local result = inventory.pushItems(location, slot, to_move, details.slot)
+					-- Update counts
+					items_stored = items_stored + result
+					storage_items[item].totalCount = storage_items[item].totalCount + result
+					storage_items[item].locations[location].count = storage_items[item].locations[location].count + result
+					
+					if items_stored == to_store then
+						break
+					end
+				end
+			end
+		else
+			-- Find chest with space
+			local storage_chests = {peripheral.find("ironchest:gold_chest")}
+			local free_chest = nil
+			local free_slot = nil
+			
+			for _, storage_chest in pairs(storage_chests) do
+				local size = storage_chest.size
+				local taken_slots = 0
+				
+				local chest_slots = {}
+				for i=1,size,1 do 
+					chest_slots[i] = 1
+				end
+				
+				for slot, item in pairs(storage_chest.list()) do
+					taken_slots = taken_slots + 1
+					chest_slots[taken_slots] = nil
+				end
+				
+				if taken_slots < size then
+					free_chest = storage_chest
+					
+					for i=1,size,1 do
+						if chest_slots ~= nil then free_slot = i end
+					end
+					break
+				end
+			end
+			
+			-- Move item to chest
+			local chest_name = free_chest.getName()
+			local result = inventory.pushItems(chest_name, slot, details.count, free_slot)
+			
+			-- Get item details
+			local item_details = free_chest.getItemDetail(free_slot)
+			
+			-- Add item to index
+			add_item_to_index(item, item_details, chest_name, free_slot, storage_items)
+		end
 	end
 end
 
