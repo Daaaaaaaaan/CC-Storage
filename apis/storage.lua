@@ -143,7 +143,7 @@ local function dump_inventory(inventory_name, storage_items)
 		local to_store = item.count
 		local items_stored = 0
 		
-		if storage_items[item] ~= nil then
+		if storage_items[item.name] ~= nil then
 			-- Item found in storage index
 			for location, details in pairs(storage_items[item].locations) do
 				if details.count < storage_items[item].stackSize then
@@ -201,7 +201,7 @@ local function dump_inventory(inventory_name, storage_items)
 			local item_details = free_chest.getItemDetail(free_slot)
 			
 			-- Add item to index
-			add_item_to_index(item.name, item_details, chest_name, free_slot, storage_items)
+			add_item_to_index(item, item_details, chest_name, free_slot, storage_items)
 		end
 	end
 end
