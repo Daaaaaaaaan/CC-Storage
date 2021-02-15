@@ -1,6 +1,9 @@
 -- Name: crafter.lua
 -- Description: Allows the controller to store new recipes
 
+-- Require Modules
+local storage = require("storage")
+
 -- Define Globals
 local crafting_slots = {"1","2","3","5","6","7","9","10","11"}
 
@@ -32,50 +35,6 @@ local function load_recipes()
 	
 	-- Failed to load
 	return false
-end
-
-local function get_items()
-	-- Wraps all storage chests
-	local storage_chests = {peripheral.find("ironchest:gold_chest")}
-	
-	-- Loops through chests and counts items
-	local items = {}
-	
-	for _, storage_chest in pairs(storage_chests) do
-		
-		-- Gets current chest name
-		local chest_name = peripheral.getName(storage_chest)
-		
-		-- Gets list of items in chest
-		local chest_items = storage_chest.list()
-		
-		-- Loop through items and add to list
-		for slot, item in pairs(chest_items) do
-			
-			-- Checks if item already exists in list
-			if items[item.name] then
-				-- Adds items to existing list
-				items[item.name].totalCount = items[item.name].totalCount + item.count
-				items[item.name].locations[chest_name] = {
-					count = item.count,
-					["slot"] = slot
-				}
-			else
-				-- Adds items to list
-				items[item.name] = {
-					totalCount = item.count,
-					locations = {
-						[chest_name] = {
-							count = item.count,
-							["slot"] = slot
-						}
-					}
-				}
-			end
-		end
-	end
-	
-	return items
 end
 
 local function has_item(item_name, chest_items, new_items)
@@ -114,41 +73,6 @@ local function has_item(item_name, chest_items, new_items)
 		return found_item
 	else
 		return false
-	end
-end
-
-local function get_item(item, amount, to_inventory, to_slot)
-	-- Moves an amount of the given item to the given inventory
-	for item_name, item_details in pairs(storage_items) do
-		
-		-- Check if current item matches required item
-		if item == item_name then
-		
-			-- Check if amount is less than or equal to stored amount
-			if amount > item_details.totalCount then
-				return false, "Not enough of item"
-			end
-			
-			-- Move items from storage to inventory
-			local moved_count = 0
-			for inventory_name, inventory_item_details in pairs(item_details.locations) do
-				
-				-- Calculates amount to move from current location
-				local move_amount = math.min(amount - moved_count, inventory_item_details.count)
-				
-				local inventory = peripheral.wrap(inventory_name)
-				inventory.pushItems(to_inventory, inventory_item_details.slot, move_amount, to_slot)
-				moved_count = moved_count + move_amount
-				
-				-- Stop looking if already moved enough
-				if moved_count == amount then
-					return true, move_amount
-				end
-			end
-			
-			-- Exit loop
-			break
-		end
 	end
 end
 
@@ -244,12 +168,13 @@ local function craft_item(craft_plan)
 		for slot, needed_item in pairs(recipe.recipe) do
 			
 			-- Updates item list
-			storage_items = get_items()
+			storage_items = storage.get_items()
 		
 			-- Move item to IO Chest
-			get_item(
+			storage.get_item(
 				needed_item,
 				to_craft.amount,
+				storage_items,
 				"minecraft:chest_14",
 				1)
 			
@@ -267,7 +192,7 @@ local function craft_item(craft_plan)
 			turtle.select(16)
 			turtle.dropDown()
 			dump_item()
-			storage_items = get_items()
+			storage_items = storage.get_items()
 		else
 			print("Failed to craft "..to_craft.name)
 			return false
@@ -281,7 +206,7 @@ local function craft(item, amount, reply_channel, modem)
 	io_chest, wired_modem = wrap_periferals()
 	
 	-- Loads items in storage and recipes
-	storage_items = get_items()
+	storage_items = storage.get_items()
 	recipe_list = load_recipes()
 	
 	-- Get recipe

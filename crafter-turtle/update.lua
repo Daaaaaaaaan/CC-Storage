@@ -23,8 +23,8 @@ local programs = {
 	{base_url.."/crafter-turtle/main-craft.lua", "/crafter-turtle/main-craft.lua"},
 	{base_url.."/crafter-turtle/crafter.lua", "/crafter-turtle/crafter.lua"},
 	{base_url.."/crafter-turtle/update.lua", "/crafter-turtle/update.lua"},
-	{base_url.."/crafter-turtle/startup", "/startup"}
-	
+	{base_url.."/crafter-turtle/startup", "/startup"},
+	{base_url.."/apis/storage.lua", "/crafter-turtle/storage.lua"}
 }
 
 for _, program in pairs(programs) do
