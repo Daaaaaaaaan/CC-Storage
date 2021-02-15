@@ -145,18 +145,18 @@ local function dump_inventory(inventory_name, storage_items)
 		
 		if storage_items[item.name] ~= nil then
 			-- Item found in storage index
-			for location, details in pairs(storage_items[item].locations) do
-				if details.count < storage_items[item].stackSize then
+			for location, details in pairs(storage_items[item.name].locations) do
+				if details.count < storage_items[item.name].stackSize then
 					-- Max to move to fill slot
-					local max_to_move = storage_items[item].stackSize - details.counts
+					local max_to_move = storage_items[item.name].stackSize - details.counts
 					-- Amount to move to this chest
 					local to_move = math.min(max_to_move, to_store - items_stored)
 					-- Attempt to move items
 					local result = inventory.pushItems(location, slot, to_move, details.slot)
 					-- Update counts
 					items_stored = items_stored + result
-					storage_items[item].totalCount = storage_items[item].totalCount + result
-					storage_items[item].locations[location].count = storage_items[item].locations[location].count + result
+					storage_items[item.name].totalCount = storage_items[item.name].totalCount + result
+					storage_items[item.name].locations[location].count = storage_items[item.name].locations[location].count + result
 					
 					if items_stored == to_store then
 						break
