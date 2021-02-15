@@ -170,7 +170,7 @@ local function dump_inventory(inventory_name, storage_items)
 			local free_slot = nil
 			
 			for _, storage_chest in pairs(storage_chests) do
-				local size = storage_chest.size
+				local size = storage_chest.size()
 				local taken_slots = 0
 				
 				local chest_slots = {}
