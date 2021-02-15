@@ -148,7 +148,7 @@ local function dump_inventory(inventory_name, storage_items)
 			for location, details in pairs(storage_items[item.name].locations) do
 				if details.count < storage_items[item.name].stackSize then
 					-- Max to move to fill slot
-					local max_to_move = storage_items[item.name].stackSize - details.counts
+					local max_to_move = storage_items[item.name].stackSize - details.count
 					-- Amount to move to this chest
 					local to_move = math.min(max_to_move, to_store - items_stored)
 					-- Attempt to move items
