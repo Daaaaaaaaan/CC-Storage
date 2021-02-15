@@ -208,5 +208,6 @@ end
 
 return {
 	get_items = get_items,
-	get_item = get_item
+	get_item = get_item,
+	dump_inventory = dump_inventory
 }

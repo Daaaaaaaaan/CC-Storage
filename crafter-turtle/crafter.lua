@@ -76,13 +76,6 @@ local function has_item(item_name, chest_items, new_items)
 	end
 end
 
-function dump_item()
-	-- Takes items from IO Chest and returns to storage
-	-- TODO Make this smart and fill stacks etc
-	local storage_chest = peripheral.wrap("ironchest:gold_chest_2")
-	storage_chest.pullItems("minecraft:chest_14", 1)
-end
-
 local function get_recipe(item)
 	-- Loops through recipes
 	for recipe_name, value in pairs(recipe_list.recipes) do
@@ -188,6 +181,7 @@ local function craft_item(craft_plan)
 		if crafted_item.name == recipe.result.name then
 			turtle.select(16)
 			turtle.dropDown()
+			dump_inventory("minecraft:chest_14", storage_items)
 			dump_item()
 			storage_items = storage.get_items()
 		else
