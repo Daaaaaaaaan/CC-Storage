@@ -195,13 +195,13 @@ local function dump_inventory(inventory_name, storage_items)
 			
 			-- Move item to chest
 			local chest_name = peripheral.getName(free_chest)
-			local result = inventory.pushItems(chest_name, slot, details.count, free_slot)
+			local result = inventory.pushItems(chest_name, slot, item.count, free_slot)
 			
 			-- Get item details
 			local item_details = free_chest.getItemDetail(free_slot)
 			
 			-- Add item to index
-			add_item_to_index(item, item_details, chest_name, free_slot, storage_items)
+			add_item_to_index(item.name, item_details, chest_name, free_slot, storage_items)
 		end
 	end
 end
