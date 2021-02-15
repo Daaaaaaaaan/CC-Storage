@@ -180,7 +180,7 @@ local function dump_inventory(inventory_name, storage_items)
 				
 				for slot, item in pairs(storage_chest.list()) do
 					taken_slots = taken_slots + 1
-					chest_slots[taken_slots] = nil
+					chest_slots[slot] = nil
 				end
 				
 				if taken_slots < size then
