@@ -187,7 +187,8 @@ local function dump_inventory(inventory_name, storage_items)
 					free_chest = storage_chest
 					
 					for i=1,size,1 do
-						if chest_slots ~= nil then free_slot = i end
+						if chest_slots[i] ~= nil then free_slot = i end
+						break
 					end
 					break
 				end
