@@ -181,8 +181,7 @@ local function craft_item(craft_plan)
 		if crafted_item.name == recipe.result.name then
 			turtle.select(16)
 			turtle.dropDown()
-			dump_inventory("minecraft:chest_14", storage_items)
-			dump_item()
+			storage.dump_inventory("minecraft:chest_14", storage_items)
 			storage_items = storage.get_items()
 		else
 			print("Failed to craft "..to_craft.name)
