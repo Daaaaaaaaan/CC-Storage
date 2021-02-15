@@ -178,18 +178,16 @@ local function dump_inventory(inventory_name, storage_items)
 					chest_slots[i] = 1
 				end
 				
-				for slot, item in pairs(storage_chest.list()) do
-					taken_slots = taken_slots + 1
-					chest_slots[slot] = nil
-				end
-				
-				if taken_slots < size then
-					free_chest = storage_chest
-					
-					for i=1,size,1 do
-						if chest_slots[i] ~= nil then free_slot = i end
+				local items = storage_chest.list()
+				for i = 1, size, 1 do
+					if items[i] == nil then
+						free_chest = storage_chest
+						free_slot = i
 						break
 					end
+				end
+				
+				if free_chest and free_slot then
 					break
 				end
 			end
