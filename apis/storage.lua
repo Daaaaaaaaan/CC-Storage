@@ -194,7 +194,7 @@ local function dump_inventory(inventory_name, storage_items)
 			end
 			
 			-- Move item to chest
-			local chest_name = free_chest.getName()
+			local chest_name = peripheral.getName(free_chest)
 			local result = inventory.pushItems(chest_name, slot, details.count, free_slot)
 			
 			-- Get item details
