@@ -166,9 +166,6 @@ local function craft_item(craft_plan)
 		
 		-- Moves each item to turtle
 		for slot, needed_item in pairs(recipe.recipe) do
-			
-			-- Updates item list
-			storage_items = storage.get_items()
 		
 			-- Move item to IO Chest
 			storage.get_item(
