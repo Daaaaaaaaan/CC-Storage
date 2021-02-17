@@ -132,10 +132,10 @@ function add_recipe()
 		
 		-- Check serialise result
 		local raw_recipe_list = nil
-		if result[0] then
+		if result[1] then
 			raw_recipe_list = result[2]
 		else
-			return false, result[1]
+			return false, result[2]
 		end
 
 		-- Open recipe file for write
