@@ -69,16 +69,17 @@ local function has_item(item_name, chest_items, new_items)
 end
 
 local function get_recipe(item)
-	-- Loops through recipes
-	for recipe_name, value in pairs(recipe_list.recipes) do
-		-- If recipe found return
-		if item == recipe_name then
-			return value
-        end
-    end
+	-- Attempts to get recipe
+	local recipe = recipe_list.recipes[item]
 	
-	-- Recipe not found returns false
-	return false
+	-- Checks if recipe found
+	if recipe then
+		-- Recipe found returns recipe
+		return recipe
+	else
+		-- Recipe not found returns false
+		return false
+	end
 end
 
 local function can_craft(recipe, craft_amount, used_items, new_items)
