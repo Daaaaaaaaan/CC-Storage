@@ -106,22 +106,40 @@ function add_recipe()
 		recipe.result['name'] = result.name
 		recipe.result['amount'] = turtle.getItemCount(16)
 		
-		-- Transmit recipe to server
-		local req = {
-			["type"] = "add_recipe",
-			["recipe"] = recipe
-		}
-		modem.transmit(0, 1, textutils.serializeJSON(req))
+		-- Open and read existing recipes.json file
+		local recipe_file, err = fs.open("/disk/recipes.json","r")
 		
-		-- Wait for response
-		local event, side, channel, replyChannel, res, distance = os.pullEvent("modem_message")
-		res = textutils.unserializeJSON(res)
-		
-		if res.status == "Success" then
-			return true, recipe
+		-- Read and close file then serialize json if exists
+		if recipe_file then
+			local recipe_list = textutils.unserialiseJSON(recipe_file.readAll())
+			recipe_file.close()
 		else
-			return false, res.status
-		end               
+			return false, err
+		end
+		
+		-- Refresh the list if contains invalid json or first run
+		if recipe_list == nil then
+			recipe_list = {
+				recipes = {}
+			}
+		end
+
+		-- Add recipe to recipe list
+		recipe_list.recipes[recipe.result.name] = recipe
+
+		-- Open recipe file for write
+		local recipe_file, err = fs.open("/disk/recipes.json","w")
+		
+		-- Check success and write to file
+		if recipe_file then
+			recipe_file.write(textutils.serialiseJSON(recipeList))
+			recipe_file.close()
+		else
+			return false, err
+		end
+
+		-- Return result
+		return true, recipe
 	else
 		return false, "Not a recipe"
 	end
