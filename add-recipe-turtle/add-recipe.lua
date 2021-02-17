@@ -133,7 +133,7 @@ function add_recipe()
 		-- Check serialise result
 		local raw_recipe_list = nil
 		if result[0] then
-			raw_recipe_list = result[1]
+			raw_recipe_list = result[2]
 		else
 			return false, result[1]
 		end
