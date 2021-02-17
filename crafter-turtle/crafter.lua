@@ -42,30 +42,22 @@ local function has_item(item_name, chest_items, new_items)
 	local found_item = nil
 	
 	-- Checks for item in storage
-	for item_index, item_data in pairs(chest_items) do
-        
-		-- Store item data if found
-		if item_name == item_index then
-			found_item = item_data
-			break
-        end
-    end
+	local temp_item = chest_items[item_name]
+	if temp_item then
+		found_item = temp_item
+	end
 	
 	-- Checks for item in items already crafted
-	for item_index, item_count in pairs(new_items) do
-		
-		-- Checks if match found
-		if item_name == item_index then
-			
-			-- If found item already exists add to count else create item
-			if found_item then
-				found_item.totalCount = found_item.totalCount + item_data.count
-			else
-				found_item = {
-					totalCount = item_count
-				}
-			end
-		end				
+	temp_item = new_items[item_name]
+	if temp_item then
+		-- If found item already exists add to count else create item
+		if found_item then
+			found_item.totalCount = found_item.totalCount + item_data.count
+		else
+			found_item = {
+				totalCount = item_count
+			}
+		end
 	end
 	
 	-- Return found item if found else return false
