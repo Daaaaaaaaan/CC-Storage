@@ -126,13 +126,24 @@ function add_recipe()
 
 		-- Add recipe to recipe list
 		recipe_list.recipes[recipe.result.name] = recipe
+		
+		-- Serialize Rcipe List
+		local result = {pcall(textutils.serialiseJSON, recipe_list)}
+		
+		-- Check serialise result
+		local raw_recipe_list = nil
+		if result[0] then
+			raw_recipe_list = result[1]
+		else
+			return false, result[1]
+		end
 
 		-- Open recipe file for write
 		local recipe_file, err = fs.open("/disk/recipes.json","w")
 		
 		-- Check success and write to file
 		if recipe_file then
-			recipe_file.write(textutils.serialiseJSON(recipeList))
+			recipe_file.write(raw_recipe_list)
 			recipe_file.close()
 		else
 			return false, err
