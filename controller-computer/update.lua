@@ -21,7 +21,6 @@ local base_url = "https://raw.githubusercontent.com/Daaaaaaaaan/CC-Storage/"..co
 local programs = {
 	{base_url.."/controller-computer/startup", "/startup"},
 	{base_url.."/controller-computer/update.lua", "/controller-computer/update.lua"},
-	{base_url.."/controller-computer/add-recipe.lua", "/controller-computer/add-recipe.lua"},
 	{base_url.."/controller-computer/main-controller.lua", "/controller-computer/main-controller.lua"},
 	{base_url.."/apis/storage.lua", "/controller-computer/storage.lua"}
 }

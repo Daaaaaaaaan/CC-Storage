@@ -3,7 +3,6 @@
 --              containing the event handling.
 
 -- Require Modules
-local add_recipe = require("add-recipe")
 local storage = require("storage")
 
 -- Define globals
@@ -49,11 +48,7 @@ local function handle_packet(event_data, modem, monitor)
 	
 	-- If exists check type and action 
 	if req then
-		if req.type == "add_recipe" then
-			-- Add recipe packet
-			add_recipe.add_recipe(req, reply_channel, modem, monitor)
-			load_recipes()
-		elseif req.type == "get_recipe" then
+		if req.type == "get_recipe" then
 			-- Get recipe packet
 			local response = {
 				status = "Success",
