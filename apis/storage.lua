@@ -137,7 +137,7 @@ local function dump_inventory(inventory_name, storage_items)
 	-- Get items from inventory
 	local inventory_items = inventory.list()
 	
-	-- Loop through items and add to list
+	-- Loop through items too add to existing stacks
 	for slot, item in pairs(inventory_items) do
 		
 		local to_store = item.count
@@ -163,7 +163,9 @@ local function dump_inventory(inventory_name, storage_items)
 					end
 				end
 			end
-		else
+		end
+		
+		if items_stored < to_store then
 			-- Find chest with space
 			local storage_chests = {peripheral.find("ironchest:gold_chest")}
 			local free_chest = nil
@@ -171,7 +173,6 @@ local function dump_inventory(inventory_name, storage_items)
 			
 			for _, storage_chest in pairs(storage_chests) do
 				local size = storage_chest.size()
-				local taken_slots = 0
 				
 				local chest_slots = {}
 				for i=1,size,1 do 
