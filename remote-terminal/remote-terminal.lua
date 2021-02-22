@@ -26,7 +26,7 @@ function create_home_screen()
 	local search_label = gui.Label.new("search_label", "Search:", 1, 3)
 	home_screen.add(search_label)
 
-	local search_box = gui.TextBox.new("search_box", "", 2, 4, false)
+	local search_box = gui.TextBox.new("search_box", "", 2, 4, 24, false)
 	home_screen.add(search_box)
 
 	local results_label = gui.Label.new("results_label", "Results:", 1, 6)

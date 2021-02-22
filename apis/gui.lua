@@ -263,12 +263,17 @@ List.new = function(id, values, x, y, width, height, colour, background_colour)
         screen.term.setTextColour(self.colour)
         screen.term.setBackgroundColour(self.background_colour)
 
-        for index, value in pairs(self.values) do
-            local value_length = string.len(value)
-            if value_length <= self.width then
-                screen.term.write(value..string.rep(" ", self.width - value_length))
+        for i=1,self.height,1 do
+            local value = self.values[i]
+            if value then
+                local value_length = string.len(value)
+                if value_length <= self.width then
+                    screen.term.write(value..string.rep(" ", self.width - value_length))
+                else
+                    screen.term.write(string.sub(value, 1, self.width))
+                end
             else
-                screen.term.write(string.sub(value, 1, self.width))
+                screen.term.write(string.rep(" ", self.width))
             end
 
             local _, y = screen.term.getCursorPos()
@@ -280,7 +285,7 @@ List.new = function(id, values, x, y, width, height, colour, background_colour)
 end
 
 return {
-	Screen = Screens,
+	Screen = Screen,
 	Label = Label,
 	Button = Button,
     TextBox = TextBox,
