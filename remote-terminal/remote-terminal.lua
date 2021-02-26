@@ -20,7 +20,17 @@ function create_craft_screen()
 	
 	local craft_screen = gui.Screen.new("craft_screen", term, colours.lightGray)
 
-	local search_label = gui.Label.new("craft_label", "Craft Screen", 2, 1)
+	local back_button = gui.Button.new(
+		"back_button",
+		" Back ",
+		function (screen)
+			screen.popScreen()
+		end,
+		2,
+		1)
+	craft_screen.add(back_button)
+
+	local search_label = gui.Label.new("craft_label", "Craft Screen", 2, 3)
 	craft_screen.add(search_label)
 
 	return craft_screen
