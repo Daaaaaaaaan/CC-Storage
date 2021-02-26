@@ -16,11 +16,28 @@ function init_modem()
 	modem.open(3)
 end
 
-function create_home_screen()
+function create_craft_screen()
+	
+	local craft_screen = gui.Screen.new("craft_screen", term, colours.lightGray)
+
+	local search_label = gui.Label.new("craft_label", "Craft Screen", 2, 1)
+	craft_screen.add(search_label)
+
+	return craft_screen
+end
+
+function create_home_screen(craft_screen)
 	
 	local home_screen = gui.Screen.new("home_screen", term, colours.lightGray)
 
-	local craft_button = gui.Button.new("craft_button", " Craft ", nil, 2, 1)
+	local craft_button = gui.Button.new(
+		"craft_button",
+		" Craft ",
+		function (screen)
+			screen.pushScreen(craft_screen)
+		end,
+		2,
+		1)
 	home_screen.add(craft_button)
 
 	local search_label = gui.Label.new("search_label", "Search:", 1, 3)
@@ -42,7 +59,7 @@ function create_home_screen()
 	home_screen.add(message_holder)
 	
 	return home_screen
-end 
+end
 
 function main()
 	
@@ -50,7 +67,8 @@ function main()
 	init_modem()
 
 	-- Get home screen
-	local home_screen = create_home_screen()
+	local craft_screen = create_craft_screen()
+	local home_screen = create_home_screen(craft_screen)
 	
 	-- Start event loop
 	home_screen.run()

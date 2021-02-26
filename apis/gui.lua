@@ -146,6 +146,8 @@ Label.new = function(id, text, x, y, colour, background_colour)
     self.text = text
     self.x = x
     self.y = y
+    self.width = x
+    self.height = 1
     self.colour = colour or colours.white
     self.background_colour = background_colour or colours.lightGrey
 
