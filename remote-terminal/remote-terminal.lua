@@ -16,28 +16,7 @@ function init_modem()
 	modem.open(3)
 end
 
-function create_craft_screen()
-	
-	local craft_screen = gui.Screen.new("craft_screen", term, colours.lightGray)
-
-	local back_button = gui.Button.new(
-		"back_button",
-		" Back ",
-		function (screen)
-			-- Returns to previous screen
-			screen.popScreen()
-		end,
-		2,
-		1)
-	craft_screen.add(back_button)
-
-	local search_label = gui.Label.new("craft_label", "Craft Screen", 2, 3)
-	craft_screen.add(search_label)
-
-	return craft_screen
-end
-
-function create_home_screen(craft_screen)
+function create_home_screen()
 	
 	local home_screen = gui.Screen.new("home_screen", term, colours.lightGray)
 
@@ -80,8 +59,8 @@ function create_home_screen(craft_screen)
 		24,
 		13,
 		function (screen, row)
-			screen.get("search_box.text").text = row
-			screen.draw()
+			-- Launch Item details screen
+			screen.pushScreen(create_item_details_screen(row))
 		end)
 	home_screen.add(results_box)
 
@@ -92,6 +71,51 @@ function create_home_screen(craft_screen)
 	home_screen.add(message_holder)
 	
 	return home_screen
+end
+
+function create_craft_screen()
+	
+	local craft_screen = gui.Screen.new("craft_screen", term, colours.lightGray)
+
+	local back_button = gui.Button.new(
+		"back_button",
+		" Back ",
+		function (screen)
+			-- Returns to previous screen
+			screen.popScreen()
+		end,
+		2,
+		1)
+	craft_screen.add(back_button)
+
+	local search_label = gui.Label.new("craft_label", "Craft Screen", 2, 3)
+	craft_screen.add(search_label)
+
+	return craft_screen
+end
+
+function create_item_details_screen(row)
+	
+	local item_details_screen = gui.Screen.new("item_details_screen", term, colours.lightGray)
+
+	local back_button = gui.Button.new(
+		"back_button",
+		" Back ",
+		function (screen)
+			-- Returns to previous screen
+			screen.popScreen()
+		end,
+		2,
+		1)
+		item_details_screen.add(back_button)
+
+	local title_label = gui.Label.new("title_label", "Item Details Screen", 2, 3)
+	item_details_screen.add(title_label)
+
+	local item_label = gui.Label.new("item_label", row, 2, 3)
+	item_details_screen.add(item_label)
+
+	return item_details_screen
 end
 
 function main()
