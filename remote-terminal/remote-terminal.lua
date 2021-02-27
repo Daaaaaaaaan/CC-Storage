@@ -80,7 +80,7 @@ function create_home_screen(craft_screen)
 		24,
 		13,
 		function (screen, row)
-			screen.components.search_box.text = row
+			screen.get("search_box.text").text = row
 			screen.draw()
 		end)
 	home_screen.add(results_box)

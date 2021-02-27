@@ -28,6 +28,10 @@ Screen.new = function(id, term, background_colour)
         components[id] = nil
     end
 
+    function self.get(component_id)
+        return components[component_id]
+    end
+
     function self.run()
 
         self.draw()
