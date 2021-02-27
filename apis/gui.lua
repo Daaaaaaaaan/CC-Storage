@@ -51,7 +51,7 @@ Screen.new = function(id, term, background_colour)
                            component_details.on_click ~= nil then
         
                             -- Create button_click event
-                            component_details.on_click(self)
+                            component_details.on_click(self, x, y)
                             return
                         end
                     end
@@ -249,7 +249,7 @@ end
 -- List Class
 local List = {}
 
-List.new = function(id, values, x, y, width, height, colour, background_colour)
+List.new = function(id, values, x, y, width, height, on_row_click, colour, background_colour)
     local self = {}
     self.id = id
     self.values = values or {}
@@ -257,6 +257,7 @@ List.new = function(id, values, x, y, width, height, colour, background_colour)
     self.y = y
     self.width = width
     self.height = height
+    self.on_row_click or nil
     self.colour = colour or colours.black
     self.background_colour = background_colour or colours.white
 
@@ -280,6 +281,21 @@ List.new = function(id, values, x, y, width, height, colour, background_colour)
 
             local _, y = screen.term.getCursorPos()
             screen.term.setCursorPos(self.x, y + 1)
+        end
+    end
+
+    function self.on_click(screen, x, y)
+
+        -- Get row number from y
+        local row_clicked = self.y + (y - self.y) + 1
+
+        -- Check if row has content
+        if self.values[i] then
+            
+            -- Call on_row_click if defined
+            if self.on_row_click then
+                self.on_row_click(screen, row_clicked)
+            end
         end
     end
 

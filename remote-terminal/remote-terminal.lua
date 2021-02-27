@@ -24,6 +24,7 @@ function create_craft_screen()
 		"back_button",
 		" Back ",
 		function (screen)
+			-- Returns to previous screen
 			screen.popScreen()
 		end,
 		2,
@@ -44,11 +45,23 @@ function create_home_screen(craft_screen)
 		"craft_button",
 		" Craft ",
 		function (screen)
-			screen.pushScreen(craft_screen)
+			-- Navigates to crafting screen
+			screen.pushScreen(create_craft_screen())
 		end,
 		2,
 		1)
 	home_screen.add(craft_button)
+
+	local dump_button = gui.Button.new(
+		"dump_button",
+		" Dump ",
+		function (screen)
+			-- Dumps inventory to storage
+			
+		end,
+		2,
+		1)
+	home_screen.add(dump_button)
 
 	local search_label = gui.Label.new("search_label", "Search:", 1, 3)
 	home_screen.add(search_label)
@@ -59,7 +72,16 @@ function create_home_screen(craft_screen)
 	local results_label = gui.Label.new("results_label", "Results:", 1, 6)
 	home_screen.add(results_label)
 
-	local results_box = gui.List.new("results_list", {}, 2, 7, 24, 13)
+	local results_box = gui.List.new(
+		"results_list",
+		{"1","2","3"},
+		2,
+		7,
+		24,
+		13,
+		function (screen, row)
+			print(row)
+		end)
 	home_screen.add(results_box)
 
 	local message_label = gui.Label.new("message_label", "Message: ", 1, 20)
@@ -77,8 +99,7 @@ function main()
 	init_modem()
 
 	-- Get home screen
-	local craft_screen = create_craft_screen()
-	local home_screen = create_home_screen(craft_screen)
+	local home_screen = create_home_screen()
 	
 	-- Start event loop
 	home_screen.run()
