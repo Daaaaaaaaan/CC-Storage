@@ -287,7 +287,7 @@ List.new = function(id, values, x, y, width, height, on_row_click, colour, backg
     function self.on_click(screen, x, y)
 
         -- Get row number from y
-        local row_clicked = self.y + (y - self.y) + 1
+        local row_clicked = y - self.y + 1
 
         -- Check if row has content
         if self.values[row_clicked] then
