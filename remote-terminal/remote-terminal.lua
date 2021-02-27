@@ -59,7 +59,7 @@ function create_home_screen(craft_screen)
 			-- Dumps inventory to storage
 			
 		end,
-		2,
+		11,
 		1)
 	home_screen.add(dump_button)
 
@@ -80,7 +80,8 @@ function create_home_screen(craft_screen)
 		24,
 		13,
 		function (screen, row)
-			print(row)
+			screen.components.search_box.text = row
+			screen.draw()
 		end)
 	home_screen.add(results_box)
 

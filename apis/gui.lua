@@ -257,7 +257,7 @@ List.new = function(id, values, x, y, width, height, on_row_click, colour, backg
     self.y = y
     self.width = width
     self.height = height
-    self.on_row_click or nil
+    self.on_row_click = on_row_click or nil
     self.colour = colour or colours.black
     self.background_colour = background_colour or colours.white
 
@@ -290,7 +290,7 @@ List.new = function(id, values, x, y, width, height, on_row_click, colour, backg
         local row_clicked = self.y + (y - self.y) + 1
 
         -- Check if row has content
-        if self.values[i] then
+        if self.values[row_clicked] then
             
             -- Call on_row_click if defined
             if self.on_row_click then
