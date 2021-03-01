@@ -36,7 +36,7 @@ end
 
 function create_home_screen()
 	
-	local home_screen = gui.Screen.new("home_screen", 1, 1, 26, 20, term, colours.lightGray)
+	local home_screen = gui.Screen.new("home_screen", term.current(), 1, 1, 26, 20, colours.lightGray)
 
 	local craft_button = gui.Button.new(
 		"craft_button",
@@ -125,7 +125,7 @@ end
 
 function create_craft_screen()
 	
-	local craft_screen = gui.Screen.new("craft_screen", 1, 1, 26, 20, term, colours.lightGray)
+	local craft_screen = gui.Screen.new("craft_screen", term.current(), 1, 1, 26, 20, colours.lightGray)
 
 	local back_button = gui.Button.new(
 		"back_button",
@@ -146,7 +146,7 @@ end
 
 function create_item_details_screen(row)
 	
-	local item_details_screen = gui.Screen.new("item_details_screen", 1, 1, 26, 20, term, colours.lightGray)
+	local item_details_screen = gui.Screen.new("item_details_screen", term.current(), 1, 1, 26, 20, colours.lightGray)
 
 	local back_button = gui.Button.new(
 		"back_button",
