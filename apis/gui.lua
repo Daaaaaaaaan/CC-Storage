@@ -1,19 +1,25 @@
 -- Screen Class
 local Screen = {}
 
-Screen.new = function(id, term, background_colour)
+Screen.new = function(id, parent, x, y, width, height, background_colour)
     local self = {}
     self.id = id
-    self.term = term
+    self.parent = parent
+    self.x = x
+    self.y = y
+    self.width = width
+    self.height = height
     self.background_colour = background_colour or colours.lightGrey
+
     self.active = false
+    self.window = window.create(self.parent, self.x, self.y, self.width, self.height)
 
     local components = {}
 
     function self.draw()
        
-        self.term.setBackgroundColour(self.background_colour)
-        self.term.clear()
+        self.window.setBackgroundColour(self.background_colour)
+        self.window.clear()
 
         for id, component in pairs(components) do
             component.draw(self)
@@ -154,12 +160,27 @@ Label.new = function(id, text, x, y, colour, background_colour)
     self.height = 1
     self.colour = colour or colours.white
     self.background_colour = background_colour or colours.lightGrey
+    
+    self.window = nil
 
     function self.draw(screen)
-        screen.term.setCursorPos(self.x, self.y)
-        screen.term.setTextColour(self.colour)
-        screen.term.setBackgroundColour(self.background_colour)
-        screen.term.write(self.text)
+        
+        if self.window then
+            self.window.setCursorPos(1, 1)
+            self.window.setTextColour(self.colour)
+            self.window.setBackgroundColour(self.background_colour)
+            self.window.clear()
+            self.window.write(self.text)
+        else
+            self.window = window.create(
+                screen.window,
+                self.x,
+                self,y,
+                self.width,
+                self.height)
+
+            self.draw(screen)
+        end
     end
 
     return self
@@ -180,11 +201,26 @@ Button.new = function(id, text, on_click, x, y, colour, background_colour, width
     self.width  = width or string.len(self.text)
     self.height = height or 1
 
+    self.window = nil
+
     function self.draw(screen)
-        screen.term.setCursorPos(self.x, self.y)
-        screen.term.setTextColour(self.colour)
-        screen.term.setBackgroundColour(self.background_colour)
-        screen.term.write(self.text)
+        
+        if self.window then
+            self.window.setCursorPos(1, 1)
+            self.window.setTextColour(self.colour)
+            self.window.setBackgroundColour(self.background_colour)
+            self.window.clear()
+            self.window.write(self.text)
+        else
+            self.window = window.create(
+                screen.window,
+                self.x,
+                self.y,
+                self.width,
+                self.height)
+
+            self.draw(screen)
+        end
     end
 
     return self
@@ -205,29 +241,45 @@ TextBox.new = function(id, initial, x, y, width, focusable, on_text_changed, col
     self.on_text_changed = on_text_changed or nil
     self.colour = colour or colours.white
     self.background_focus_colour = background_focus_colour or colours.grey
-    self.background_colour = background_colour or colours.black 
+    self.background_colour = background_colour or colours.black
+
+    self.window = nil
 
     local display_text = ""
     
     function self.draw(screen)
-        screen.term.setCursorPos(self.x, self.y)
-        screen.term.setTextColour(self.colour)
+        
+        if self.window then
+            self.window.setCursorPos(1, 1)
+            self.window.setTextColour(self.colour)
 
-        if focusable == false or screen.focus == self.id then
-            screen.term.setBackgroundColour(self.background_focus_colour)
+            if focusable == false or screen.focus == self.id then
+                self.window.setBackgroundColour(self.background_focus_colour)
+            else
+                self.window.setBackgroundColour(self.background_colour)
+            end
+
+            self.window.clear()
+
+            local text_length = string.len(self.text)
+
+            if text_length > self.width then
+                display_text = string.sub(self.text, text_length - self.width + 1, -1)
+            else
+                display_text = self.text
+            end
+
+            self.window.write(display_text)
         else
-            screen.term.setBackgroundColour(self.background_colour)
+            self.window = window.create(
+                screen.window,
+                self.x,
+                self.y,
+                self.width,
+                self.height)
+
+            self.draw(screen)
         end
-
-        local text_length = string.len(self.text)
-
-        if text_length > self.width then
-            display_text = string.sub(self.text, text_length - self.width + 1, -1)
-        else
-            display_text = self.text..string.rep(" ", self.width - string.len(self.text))
-        end
-
-        screen.term.write(display_text)
     end
 
     function self.on_click(screen)
@@ -237,7 +289,7 @@ TextBox.new = function(id, initial, x, y, width, focusable, on_text_changed, col
 
     function self.on_char(screen, char)
         self.text = self.text..char
-        screen.draw()
+        self.draw(screen)
 
         if self.on_text_changed then
             self.on_text_changed(screen, self.text)
@@ -248,7 +300,7 @@ TextBox.new = function(id, initial, x, y, width, focusable, on_text_changed, col
 
         if keys.getName(key_code) == "backspace" then
             self.text = string.sub(self.text, 1, -2)
-            screen.draw()
+            self.draw(screen)
 
             if self.on_text_changed then
                 self.on_text_changed(screen, self.text)
@@ -274,26 +326,41 @@ List.new = function(id, values, x, y, width, height, on_row_click, colour, backg
     self.colour = colour or colours.black
     self.background_colour = background_colour or colours.white
 
+    self.window = nil
+
     function self.draw(screen)
-        screen.term.setCursorPos(self.x, self.y)
-        screen.term.setTextColour(self.colour)
-        screen.term.setBackgroundColour(self.background_colour)
+        
+        if self.window then
+            self.window.setCursorPos(1, 1)
+            self.window.setTextColour(self.colour)
+            self.window.setBackgroundColour(self.background_colour)
+            self.window.clear()
 
-        for i=1,self.height,1 do
-            local value = self.values[i]
-            if value then
-                local value_length = string.len(value)
-                if value_length <= self.width then
-                    screen.term.write(value..string.rep(" ", self.width - value_length))
+            for i=1,self.height,1 do
+                local value = self.values[i]
+                if value then
+                    local value_length = string.len(value)
+                    if value_length <= self.width then
+                        self.window.write(value)
+                    else
+                        self.window.write(string.sub(value, 1, self.width))
+                    end
                 else
-                    screen.term.write(string.sub(value, 1, self.width))
+                    self.window.write(string.rep(" ", self.width))
                 end
-            else
-                screen.term.write(string.rep(" ", self.width))
-            end
 
-            local _, y = screen.term.getCursorPos()
-            screen.term.setCursorPos(self.x, y + 1)
+                local _, y = self.window.getCursorPos()
+                self.window.setCursorPos(1, y + 1)
+            end
+        else
+            self.window = window.create(
+                screen.window,
+                self.x,
+                self.y,
+                self.width,
+                self.height)
+
+            self.draw(screen)
         end
     end
 

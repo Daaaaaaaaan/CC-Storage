@@ -89,11 +89,11 @@ function create_home_screen()
 
 				-- Update results on screen
 				screen.get("results_list").values = display_results
-				screen.draw()
+				screen.get("results_list").draw(screen)
 			else
 				-- Display error
 				screen.get("message_holder").text = results
-				screen.draw()
+				screen.get("message_holder").draw(screen)
 			end
 		end)
 	home_screen.add(search_box)
