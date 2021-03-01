@@ -16,6 +16,28 @@ function init_modem()
 	modem.open(3)
 end
 
+function search_items(search)
+	-- Get results from server
+	local request = {
+		["type"] = "items_search",
+		["search"] = search
+	}
+	modem.transmit(0, 3, textutils.serializeJSON(request))
+
+	local event, side, channel, replyChannel, res, distance = os.pullEvent("modem_message")
+	res = textutils.unserializeJSON(res)
+
+	-- Clears results area
+	results_window.clear()
+
+	if res.status == "Success" then
+		
+		return true, res.results
+	else
+		return false, res.status
+	end
+end
+
 function create_home_screen()
 	
 	local home_screen = gui.Screen.new("home_screen", term, colours.lightGray)
@@ -45,7 +67,38 @@ function create_home_screen()
 	local search_label = gui.Label.new("search_label", "Search:", 1, 3)
 	home_screen.add(search_label)
 
-	local search_box = gui.TextBox.new("search_box", "", 2, 4, 24, false)
+	local search_box = gui.TextBox.new(
+		"search_box",
+		"",
+		2,
+		4,
+		24,
+		false,
+		function (screen, text)
+			-- On text changed
+			
+			-- Get search results
+			local success, results = search_items(text)
+			
+			-- Update stored results
+			if success then
+				-- Store results in screen table
+				screen.search_results = results
+
+				-- Create displayable results list
+				local display_results = {}
+				for id, details in pairs(results) do
+					display_results[#display_results + 1] = details.displayName
+				end
+
+				-- Update resulrs on screen
+				screen.get("search_box").values = display_results
+				screen.draw()
+			else
+				-- Display error
+				screen.get("message_holder").text = results
+			end
+		end)
 	home_screen.add(search_box)
 
 	local results_label = gui.Label.new("results_label", "Results:", 1, 6)
@@ -53,7 +106,7 @@ function create_home_screen()
 
 	local results_box = gui.List.new(
 		"results_list",
-		{"1","2","3"},
+		{},
 		2,
 		7,
 		24,

@@ -193,7 +193,7 @@ end
 -- Text Box Class
 local TextBox = {}
 
-TextBox.new = function(id, initial, x, y, width, focusable, colour, background_focus_colour, background_colour)
+TextBox.new = function(id, initial, x, y, width, focusable, on_text_changed, colour, background_focus_colour, background_colour)
     local self = {}
     self.id = id
     self.text = initial
@@ -202,6 +202,7 @@ TextBox.new = function(id, initial, x, y, width, focusable, colour, background_f
     self.width = width
     self.height = 1
     self.focusable = focusable
+    self.on_text_changed = on_text_changed or nil
     self.colour = colour or colours.white
     self.background_focus_colour = background_focus_colour or colours.grey
     self.background_colour = background_colour or colours.black 
@@ -237,6 +238,10 @@ TextBox.new = function(id, initial, x, y, width, focusable, colour, background_f
     function self.on_char(screen, char)
         self.text = self.text..char
         screen.draw()
+
+        if self.on_text_changed then
+            self.on_text_changed(screen, self.text)
+        end
     end
 
     function self.on_key(screen, key_code)
@@ -244,6 +249,10 @@ TextBox.new = function(id, initial, x, y, width, focusable, colour, background_f
         if keys.getName(key_code) == "backspace" then
             self.text = string.sub(self.text, 1, -2)
             screen.draw()
+        end
+
+        if self.on_text_changed then
+            self.on_text_changed(screen, self.text)
         end
     end
 
