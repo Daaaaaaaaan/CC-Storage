@@ -249,10 +249,10 @@ TextBox.new = function(id, initial, x, y, width, focusable, on_text_changed, col
         if keys.getName(key_code) == "backspace" then
             self.text = string.sub(self.text, 1, -2)
             screen.draw()
-        end
 
-        if self.on_text_changed then
-            self.on_text_changed(screen, self.text)
+            if self.on_text_changed then
+                self.on_text_changed(screen, self.text)
+            end
         end
     end
 

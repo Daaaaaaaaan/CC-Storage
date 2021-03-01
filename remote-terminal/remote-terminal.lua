@@ -27,11 +27,7 @@ function search_items(search)
 	local event, side, channel, replyChannel, res, distance = os.pullEvent("modem_message")
 	res = textutils.unserializeJSON(res)
 
-	-- Clears results area
-	results_window.clear()
-
 	if res.status == "Success" then
-		
 		return true, res.results
 	else
 		return false, res.status
@@ -79,7 +75,7 @@ function create_home_screen()
 			
 			-- Get search results
 			local success, results = search_items(text)
-			
+			success = false
 			-- Update stored results
 			if success then
 				-- Store results in screen table
@@ -88,7 +84,7 @@ function create_home_screen()
 				-- Create displayable results list
 				local display_results = {}
 				for id, details in pairs(results) do
-					display_results[#display_results + 1] = details.displayName
+					table.insert(display_results, details.displayName)
 				end
 
 				-- Update resulrs on screen
@@ -97,6 +93,7 @@ function create_home_screen()
 			else
 				-- Display error
 				screen.get("message_holder").text = results
+				screen.draw()
 			end
 		end)
 	home_screen.add(search_box)
