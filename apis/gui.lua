@@ -153,10 +153,10 @@ local Label = {}
 Label.new = function(id, text, x, y, colour, background_colour)
     local self = {}
     self.id = id
-    self.text = text
+    self.text = text or ""
     self.x = x
     self.y = y
-    self.width = x
+    self.width = string.len(self.text)
     self.height = 1
     self.colour = colour or colours.white
     self.background_colour = background_colour or colours.lightGrey
@@ -175,7 +175,7 @@ Label.new = function(id, text, x, y, colour, background_colour)
             self.window = window.create(
                 screen.window,
                 self.x,
-                self,y,
+                self.y,
                 self.width,
                 self.height)
 
