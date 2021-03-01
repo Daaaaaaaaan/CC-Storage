@@ -75,7 +75,7 @@ function create_home_screen()
 			
 			-- Get search results
 			local success, results = search_items(text)
-			success = false
+
 			-- Update stored results
 			if success then
 				-- Store results in screen table
@@ -87,8 +87,8 @@ function create_home_screen()
 					table.insert(display_results, details.displayName)
 				end
 
-				-- Update resulrs on screen
-				screen.get("search_box").values = display_results
+				-- Update results on screen
+				screen.get("results_list").values = display_results
 				screen.draw()
 			else
 				-- Display error
@@ -162,7 +162,7 @@ function create_item_details_screen(row)
 	local title_label = gui.Label.new("title_label", "Item Details Screen", 2, 3)
 	item_details_screen.add(title_label)
 
-	local item_label = gui.Label.new("item_label", row, 2, 3)
+	local item_label = gui.Label.new("item_label", row, 2, 5)
 	item_details_screen.add(item_label)
 
 	return item_details_screen
